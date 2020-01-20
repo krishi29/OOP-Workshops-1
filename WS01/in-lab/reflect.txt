@@ -1,0 +1,23 @@
+﻿// Name: Krishna Patel
+// Seneca Student ID:162406185
+// Seneca email:kdpatel27@myseneca.ca
+// Date of completion: 2020-01-15
+//
+// I confirm that the content of this file is created by me,
+//   with the exception of the parts provided to me by my professor.
+
+
+
+
+1. the difference between internal and external linkage using examples from your code.
+- Internal linkage is used for the variables' scope that is itself's module, such as static variable. 
+  External linkage is used for extern variable.
+
+2. what are `static` variables and how were they useful in this workshop.
+ - Static Variables are used to give special characteristics to an element. Static elements are allocated storage only once in a program lifetime in static storage area.
+   And the scope of it is on in its module. 
+
+3.The changes that you made in upgrading your `Event` class.
+- 'char description[128]' is changed to `char* arrDes`
+   use deep copy for copy constructor and set the function.Add a destructor to free memory.
+
