@@ -1,0 +1,8 @@
+- what is the reason for the significant time difference between the copy and move operations
+ 
+copy operations : copy constructor and copy assignment is to make a copy of one object to another, we need to allocate 
+new memory and than copy the resource.
+move operations : The goal of move constructor and move assigment is to move the ownership of the resources from 
+one object to another.We only need the point to allocated memory.
+Compare to move operations copy is much slow.
+
