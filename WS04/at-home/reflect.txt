@@ -1,0 +1,15 @@
+Student Name: krishna patel
+Student Number: 162406185
+
+			Workshop 4 reflection
+1. The difference between the implmentations of a composition and an aggregation
+- Aggregation implies a relationship where the child can exist independently of the parent
+For example, Stock market company and their employees, delete the company and the 
+employees still exist. Differently, composition implies a relationship where the child cannot
+exist independent of the parent. 
+
+2. The difference between the implementations of move and copy functions in a 
+composition and an aggregation
+- If a class with a resource is responsible for copying and destroying its resource, then
+that class is a composition. If the class is not responsible for copying or destroying its
+resource, then that class is an aggregation or an association. 

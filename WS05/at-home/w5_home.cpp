@@ -1,3 +1,4 @@
+
 // Workshop 5 - Functions and Error Handling
 // 2020/02 - Cornel
 
@@ -17,16 +18,16 @@ using namespace sdds;
 
 // The observer function for adding books to the collection:
 //   should be called every time a new book is added to the collection
-void bookAddedObserver(const Collection<Book>& theCollection,
-	const Book& theBook)
+void bookAddedObserver(const Collection<Book> & theCollection,
+	const Book & theBook)
 {
 	std::cout << "Book \"" << theBook.title() << "\" added!\n";
 }
 
 // The observer function for adding movies to the collection:
 //   should be called every time a new movie is added to the collection
-void movieAddedObserver(const Collection<Movie>& theCollection,
-	const Movie& theMovie)
+void movieAddedObserver(const Collection<Movie> & theCollection,
+	const Movie & theMovie)
 {
 	std::cout << "Movie \"" << theMovie.title()
 		<< "\" added to collection \"" << theCollection.name()
@@ -45,28 +46,76 @@ int main(int argc, char** argv)
 	// get the book
 	sdds::Collection<sdds::Book> library("Bestsellers");
 	{
-		// TODO: load the first 4 books from the file "argv[1]".
-		//       - read one line at a time, and pass it to the Book constructor
-		//       - store each book read into the collection "library" (use the += operator)
-		//       - lines that start with "#" are considered comments and should be ignored
+
+		{
+
+			// TODO: load the collection of books from the file "argv[1]".
+			//       - read one line at a time, and pass it to the Book constructor
+			//       - store each book read into the array "library"
+			//       - lines that start with "#" are considered comments and should be ignored
 
 
-		library.setObserver(bookAddedObserver);
+			size_t count = 0;
+			std::ifstream file(argv[1]);
+			if (!file)
+			{
+				std::cerr << "Error![" << argv[1] << "].\n";
+				return 1;
+			}
+			std::string text;
+			do
+			{
+				std::getline(file, text);
+				if (file)
+				{
+					if (text[0] != '#')
+					{
+						library += Book(text);
+						++count;
+					}
+				}
+			} while (file && count < 4);
+			library.setObserver(bookAddedObserver);
+			// TODO: add the rest of the books from the file.
+			do {
+				std::getline(file, text);
+				if (file)
+				{
 
-		// TODO: add the rest of the books from the file.
+					if (text[0] != '#')
+					{
+						library += Book(text);
+
+					}
+				}
+			} while (file);
+			file.close();
+
+		}
 
 	}
 
 	double usdToCadRate = 1.3;
 	double gbpToCadRate = 1.5;
 
-	// TODO: (from in-lab) create a lambda expression that fixes the price of a book accoding to the rules
+	// TODO: create a lambda expression that fixes the price of a book accoding to the rules
 	//       - the expression should receive a single parameter of type "Book&"
 	//       - if the book was published in US, multiply the price with "usdToCadRate"
 	//            and save the new price in the book object
 	//       - if the book was published in UK between 1990 and 1999 (inclussive),
 	//            multiply the price with "gbpToCadRate" and save the new price in the book object
+	auto updatePrice = [=](Book& book1)
+	{
+		if (book1.country() == "UK" && book1.year() >= 1990 && book1.year() <= 1999)
+		{
+			book1.price() *= gbpToCadRate;
+		}
+		if (book1.country() == "US")
+		{
+			book1.price() *= usdToCadRate;
+		}
 
+	};
 
 	std::cout << "-----------------------------------------\n";
 	std::cout << "The library content\n";
@@ -76,6 +125,10 @@ int main(int argc, char** argv)
 
 	// TODO (from in-lab): iterate over the library and update the price of each book
 	//         using the lambda defined above.
+	for (size_t i = 0; i < library.size(); i++)
+	{
+		updatePrice(library[i]);
+	}
 
 
 	std::cout << "-----------------------------------------\n";
@@ -93,52 +146,91 @@ int main(int argc, char** argv)
 		//       - read one line at a time, and pass it to the Movie constructor
 		//       - store each movie read into the array "movies"
 		//       - lines that start with "#" are considered comments and should be ignored
+		size_t count = 0;
+		std::ifstream file2(argv[2]);
+		if (!file2)
+		{
+			std::cerr << "Error![" << argv[2] << "].\n";
+			return 1;
+		}
+		std::string text;
+		do
+		{
+			std::getline(file2, text);
+			if (file2)
+			{
+				if (text[0] != '#')
+				{
+					movies[count] = Movie(text);
+					++count;
+				}
+			}
+		} while (file2);
 
 
-	std::cout << "-----------------------------------------\n";
-	std::cout << "Testing addition and callback function\n";
-	std::cout << "-----------------------------------------\n";
-	// Add a few movies to collection; no observer is set
-	((theCollection += movies[0]) += movies[1]) += movies[2];
-	theCollection += movies[1];
-	// add more movies; now we get a callback from the collection
-	theCollection.setObserver(movieAddedObserver);
-	theCollection += movies[3];
-	theCollection += movies[3];
-	theCollection += movies[4];
-	std::cout << "-----------------------------------------\n\n";
-	
-	std::cout << "-----------------------------------------\n";
-	std::cout << "Testing exceptions and operator[]\n";
-	std::cout << "-----------------------------------------\n";
+		std::cout << "-----------------------------------------\n";
+		std::cout << "Testing addition and callback function\n";
+		std::cout << "-----------------------------------------\n";
+		// Add a few movies to collection; no observer is set
+		((theCollection += movies[0]) += movies[1]) += movies[2];
+		theCollection += movies[1];
+		// add more movies; now we get a callback from the collection
+		theCollection.setObserver(movieAddedObserver);
+		theCollection += movies[3];
+		theCollection += movies[3];
+		theCollection += movies[4];
+		std::cout << "-----------------------------------------\n\n";
+
+		std::cout << "-----------------------------------------\n";
+		std::cout << "Testing exceptions and operator[]\n";
+		std::cout << "-----------------------------------------\n";
 
 		// TODO: The following loop can generate generate an exception
 		//         write code to handle the exception
 		//       If an exception occurs print a message in the following format
 		//EXCEPTION: ERROR_MESSAGE<endl>
 		//         where ERROR_MESSAGE is extracted from the exception object.
-		for (auto i = 0u; i < 10; ++i)
-			std::cout << theCollection[i];
+		try {
+			for (auto i = 0u; i < 10; ++i) {
+				std::cout << theCollection[i];
+			}
+		}
+		catch (const std::out_of_range & e) {
+			std::cout << "EXCEPTION: " << e.what() << std::endl;
+		}
+		catch (...) {
+			std::cout << "ERROR" << std::endl;
+		}
+		std::cout << "-----------------------------------------\n\n";
 
-	std::cout << "-----------------------------------------\n\n";
 
-
-	std::cout << "-----------------------------------------\n";
-	std::cout << "Testing the functor\n";
-	std::cout << "-----------------------------------------\n";
-	for (auto i = 3u; i <= 4u; ++i)
-	{
+		std::cout << "-----------------------------------------\n";
+		std::cout << "Testing the functor\n";
+		std::cout << "-----------------------------------------\n";
+		for (auto i = 3u; i <= 4u; ++i)
+		{
 			// TODO: The following statement can generate generate an exception
 			//         write code to handle the exception
 			//       If an exception occurs print a message in the following format
 			//EXCEPTION: ERROR_MESSAGE<endl>
 			//         where ERROR_MESSAGE is extracted from the exception object.
-			SpellChecker sp(argv[i]);
-			for (auto j = 0u; j < theCollection.size(); ++j)
-				theCollection[j].fixSpelling(sp);
-			for (auto j = 0u; j < library.size(); ++j)
-				library[j].fixSpelling(sp);
+			try {
+				SpellChecker sp(argv[i]);
+				for (auto j = 0u; j < theCollection.size(); ++j)
+					theCollection[j].fixSpelling(sp);
+				for (auto j = 0u; j < library.size(); ++j)
+					library[j].fixSpelling(sp);
+			}
+			catch (const char* msg)
+			{
+				std::cout << "EXCEPTION: " << msg << std::endl;
+			}
+			catch (...)
+			{
+				std::cout << "ERROR" << std::endl;
+			}
 
+		}
 	}
 	std::cout << "--------------- Movies ------------------\n";
 	std::cout << theCollection;
@@ -159,4 +251,5 @@ int main(int argc, char** argv)
 	std::cout << "-----------------------------------------\n\n";
 
 	return 0;
+
 }

@@ -19,8 +19,9 @@ namespace sdds {
         std::chrono::steady_clock::time_point startTime{};
         std::chrono::steady_clock::time_point endTime{};
 
+   
         struct {
-            std::string eventName{};
+            std::string eventName{};VI
             std::string timeUnit{};
             std::chrono::steady_clock::duration duration{};
         }

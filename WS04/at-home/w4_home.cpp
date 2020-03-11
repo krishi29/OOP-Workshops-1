@@ -6,13 +6,10 @@
 #include <fstream>
 #include <string>
 #include <utility>
-#include "Restaurant.h"
-#include "Restaurant.h"
 #include "ConfirmationSender.h"
-#include "ConfirmationSender.h"
-#include "Reservation.h"
 #include "Reservation.h"
 
+using namespace sdds;
 
 int main(int argc, char** argv)
 {
